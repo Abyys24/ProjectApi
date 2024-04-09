@@ -61,6 +61,7 @@ async function createUser(request, response, next) {
       );
     }
 
+
     const emailTaken = await usersService.checkEmailTaken(email);
     if (emailTaken) {
       throw errorResponder(
