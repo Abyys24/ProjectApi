@@ -1,5 +1,7 @@
+
 const usersRepository = require('./users-repository');
 const { hashPassword } = require('../../../utils/password');
+const { email } = require('../../../models/users-schema');
 
 /**
  * Get list of users
@@ -39,6 +41,16 @@ async function getUser(id) {
     name: user.name,
     email: user.email,
   };
+}
+
+/**
+ * Get user detail
+ * @param {string} id - User ID
+ * @returns {Object}
+ */
+async function checkEmailTaken(email) {
+  const existingUser = await usersRepository.checkEmail(email);
+  return existingUser;
 }
 
 /**
@@ -86,6 +98,15 @@ async function updateUser(id, name, email) {
 }
 
 /**
+ * Update existing user
+ * @param {string} id - User ID
+ * @param {string} password - Password
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+
+
+/**
  * Delete user
  * @param {string} id - User ID
  * @returns {boolean}
@@ -107,21 +128,11 @@ async function deleteUser(id) {
   return true;
 }
 
-async function checkEmailExists(name, email, password) {
-  // Check if the email already exists
-  const emailExists = await userRepository.checkEmailExists(email);
-  if (emailExists) {
-    throw new Error('Email already exists');
-  }
-
-  // If email doesn't exist, proceed to create user
-  return userRepository.createUser(name, email, password);
-}
-
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  checkEmailTaken,
 };

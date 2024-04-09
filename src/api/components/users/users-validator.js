@@ -13,6 +13,6 @@ module.exports = {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
       email: joi.string().email().required().label('Email'),
-    },
-  },
+    },
+  },
 };

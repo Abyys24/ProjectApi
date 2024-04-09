@@ -33,6 +33,17 @@ async function createUser(name, email, password) {
 }
 
 /**
+ * Check existing email
+ * @param {string} email - Email
+ * @returns {Promise}
+ */
+async function checkEmail(email){
+  const existingUser = await User.findOne({ email });
+  return existingUser;
+  
+}
+
+/**
  * Update existing user
  * @param {string} id - User ID
  * @param {string} name - Name
@@ -53,6 +64,8 @@ async function updateUser(id, name, email) {
   );
 }
 
+
+
 /**
  * Delete a user
  * @param {string} id - User ID
@@ -62,20 +75,11 @@ async function deleteUser(id) {
   return User.deleteOne({ _id: id });
 }
 
-/**
- * Check if a user with given email already exists
- * @param {string} email - Email to check
- * @returns {Promise}
- */
-async function checkEmailExists(email) {
-  return User.exists({ email });
-}
-
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
-  checkEmailExists
+  checkEmail,
 };

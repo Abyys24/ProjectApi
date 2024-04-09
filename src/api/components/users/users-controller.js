@@ -1,5 +1,7 @@
+
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const { password } = require('../../../models/users-schema');
 
 /**
  * Handle get list of users request
@@ -51,24 +53,23 @@ async function createUser(request, response, next) {
     const email = request.body.email;
     const password = request.body.password;
 
-    // Check if the email already exists
-    const emailExists = await userService.checkEmailExists(email);
-    if (emailExists) {
+
+    const emailTaken = await usersService.checkEmailTaken(email);
+    if (emailTaken) {
       throw errorResponder(
         errorTypes.EMAIL_ALREADY_TAKEN,
-        'Email already exists'
+        'Email already exist'
       );
     }
 
-    // If email doesn't exist, proceed to create user
-    const success = await userService.createUser(name, email, password);
+    const success = await usersService.createUser(name, email, password);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
         'Failed to create user'
       );
     }
-  
+
     return response.status(200).json({ name, email });
   } catch (error) {
     return next(error);
@@ -88,6 +89,15 @@ async function updateUser(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
 
+    
+    const emailTaken = await usersService.checkEmailTaken(email);
+    if (emailTaken) {
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'Email already exist'
+      );
+    }
+
     const success = await usersService.updateUser(id, name, email);
     if (!success) {
       throw errorResponder(
@@ -101,6 +111,15 @@ async function updateUser(request, response, next) {
     return next(error);
   }
 }
+
+/**
+ * Handle update password request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+
 
 /**
  * Handle delete user request
@@ -132,5 +151,5 @@ module.exports = {
   getUser,
   createUser,
   updateUser,
-  deleteUser,
+  deleteUser
 };
