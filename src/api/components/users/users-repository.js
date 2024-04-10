@@ -44,6 +44,16 @@ async function checkEmail(email){
 }
 
 /**
+ * Update user's password
+ * @param {string} id - User ID
+ * @param {string} newPassword - Hashed new password
+ * @returns {Promise}
+ */
+async function updatePassword(id, newPassword) {
+  return User.findByIdAndUpdate(id, { password: newPassword });
+}
+
+/**
  * Update existing user
  * @param {string} id - User ID
  * @param {string} name - Name
@@ -64,8 +74,6 @@ async function updateUser(id, name, email) {
   );
 }
 
-
-
 /**
  * Delete a user
  * @param {string} id - User ID
@@ -82,4 +90,5 @@ module.exports = {
   updateUser,
   deleteUser,
   checkEmail,
+  updatePassword,
 };
